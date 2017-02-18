@@ -2,18 +2,18 @@
 % % load head_light_distance
 % load 'D:\zhefeng\turn&explore\20161223zwq\160413 w1118ctr\lightregion.mat'
 clear;
-dir='D:\temp2\160413 w1118ctr';
+dir = 'D:\temp2\160413 w1118ctr';
 cd(dir);
 load motorData.mat
 load lightregion.mat
 contour = bwperim(lightregion.image);
-wperim=bwperim(contour);
-imcontour=wperim;
+wperim = bwperim(contour);
+imcontour = wperim;
 %
-centerIndp=find(wperim>0);
-[py,px]=ind2sub(size(wperim),centerIndp);
-lightspot_contour.x=[px'];
-lightspot_contour.y=[py'];
+centerIndp = find(wperim>0);
+[py,px] = ind2sub(size(wperim),centerIndp);
+lightspot_contour.x = px';
+lightspot_contour.y = py';
 save lightspot_contour lightspot_contour
 
 %%%%%% smooth the contour with sgolayfilt %%%%%%%%%%%%%%
@@ -100,7 +100,7 @@ for i = 1:p
     %peaks
     threshold_bodyomega = 0.3;
     set_threshold_bodyomega = 0.2; %threshold_imega when headtheta is large to exclude small passive turning
-    frame_bodyomega_peak(find(abs(value_bodyomega_peak)<threshold_bodyomega)) = [];
+    frame_bodyomega_peak(abs(value_bodyomega_peak)<threshold_bodyomega) = [];
     value_bodyomega_peak = bodyomega(frame_bodyomega_peak);
 
     %find peaks of headomega
@@ -110,7 +110,7 @@ for i = 1:p
     frame_headomega_peak = cast_max_frames(headomega, lambda);
     frame_headomega_peak = frame_headomega_peak';    
     value_headomega_peak = headomega(frame_headomega_peak);
-    frame_headomega_peak(find(abs(value_headomega_peak)<threshold_headomega))=[];
+    frame_headomega_peak(abs(value_headomega_peak)<threshold_headomega)=[];
     value_headomega_peak = headomega(frame_headomega_peak);
     % find tailspeed at zero less than a threshold
     threshold_tailspeed = 2.5;
@@ -128,8 +128,8 @@ for i = 1:p
             value_headomega_peak(d)=-100;
         end
     end
-    frame_headomega_peak(find( frame_headomega_peak == -1))=[];
-    value_headomega_peak(find( value_headomega_peak == -100))=[];
+    frame_headomega_peak( frame_headomega_peak == -1)=[];
+    value_headomega_peak(value_headomega_peak == -100)=[];
     
     
     tailspeed_zero = find(tailspeed <= threshold_tailspeed);
@@ -253,10 +253,10 @@ for i = 1:p
         % spot (nearest point to mid and tail on light spot contour)
         distance_mid_temp = sqrt((midXY(still_starts(j),1)-lightspot_contour.x(:)).^2 +(midXY(still_starts(j),2)-lightspot_contour.y(:)).^2);
         distance_mid = min(distance_mid_temp);
-        lightspot_contour_mid = [lightspot_contour.x(find(distance_mid_temp ==distance_mid)) lightspot_contour.y(find(distance_mid_temp ==distance_mid))];
+        lightspot_contour_mid = [lightspot_contour.x(distance_mid_temp ==distance_mid) lightspot_contour.y(distance_mid_temp ==distance_mid)];
         distance_tail_temp = sqrt((tailXY(still_starts(j),1)-lightspot_contour.x(:)).^2 +(tailXY(still_starts(j),2)-lightspot_contour.y(:)).^2);
         distance_tail = min(distance_tail_temp);
-        lightspot_contour_tail = [lightspot_contour.x(find(distance_tail_temp ==distance_tail)) lightspot_contour.y(find(distance_tail_temp ==distance_tail))];
+        lightspot_contour_tail = [lightspot_contour.x(distance_tail_temp ==distance_tail) lightspot_contour.y(distance_tail_temp ==distance_tail)];
         light_edge_ori = atan2((lightspot_contour_tail(2)-lightspot_contour_mid(2)), (lightspot_contour_tail(1)-lightspot_contour_mid(1))); 
         aat = unwrap(light_edge_ori)-unwrap(bodyTheta(still_starts(j)));
         body_edge_angle(j) = atan2(sin(aat), cos(aat));
@@ -288,7 +288,7 @@ for i = 1:p
             turn_avoid_light(j) = 1; % 1 means failure in light avoidance
         else
             turn_avoid_light(j) = 0; % 0 means succuss in light avoidance
-        end      
+        end
     end
     
     % save the data and parameters related to turning event
@@ -305,8 +305,8 @@ for i = 1:p
     turn_event{i}.frame_headomega_zero =frame_headomega_zero;
     turn_event{i}.distance_headomega_zero =distance_headomega_zero;
     turn_event{i}.distance_headomega_zero_first =distance_headomega_zero_first;
-
-
+    
+    
     
     % judge light related turning events
     distance_in_light_threshold = 50;
@@ -328,13 +328,13 @@ for i = 1:p
     
     if ~isempty(find(ismember(headXY_temp,lightregion.region,'rows')))
         still_starts_in_light = still_starts(find(ismember(headXY_temp,lightregion.region,'rows')));
-
+        
         %judge turn happening in light but within a distance
         % %         r = size(frame_turn_peaks_in_light,1);
         r = size(still_starts_in_light,2);
         %         display(still_starts_in_light);
         for j = 1:r
-            distance_head_temp = min(sqrt((headXY(still_starts_in_light(j),1)-lightspot_contour.x(:)).^2 +(headXY(still_starts_in_light(j),2)-lightspot_contour.y(:)).^2));          
+            distance_head_temp = min(sqrt((headXY(still_starts_in_light(j),1)-lightspot_contour.x(:)).^2 +(headXY(still_starts_in_light(j),2)-lightspot_contour.y(:)).^2));
             % exclude turning out of the range
             if distance_head_temp > distance_in_light_threshold
                 still_starts_in_light(j)=-1;
@@ -342,7 +342,7 @@ for i = 1:p
             
             %exclude turning with the range to light contour but after deep entrance into light
             if distance_head_temp < distance_in_light_threshold
-            % exclude turns after more than 5 seconds in light
+                % exclude turns after more than 5 seconds in light
                 y = 0;
                 for z = 1:still_starts_in_light(j)
                     if ~isempty(find(ismember(headXYrnd(z,:),lightregion.region,'rows')))
@@ -350,30 +350,30 @@ for i = 1:p
                     end
                 end
                 
-                if y > 300 
+                if y > 300
                     still_starts_in_light(j)=-1;
-                end                
+                end
             end
         end
-        still_starts_in_light(find(still_starts_in_light==-1))=[];       
+        still_starts_in_light(still_starts_in_light==-1)=[];
     end
-       display(still_starts_in_light);
-       
-    %%%% find turns out of light %%%%    
+    display(still_starts_in_light);
+    
+    %%%% find turns out of light %%%%
     if ~isempty(find(~ismember(headXY_temp,lightregion.region,'rows')))
         still_starts_out_light = still_starts(find(~ismember(headXY_temp,lightregion.region,'rows')));
-
+        
         %judge turn happening out of light but within a distance
-        q = size(still_starts_out_light,2); 
+        q = size(still_starts_out_light,2);
         for j= 1:q
             a = find(still_starts==still_starts_out_light(j));
-            distance_head_temp = distance_head_start(a);            
+            distance_head_temp = distance_head_start(a);
             if distance_head_temp > distance_out_light_threshold
                 still_starts_out_light(j)=-1;
             end
             
             %exclude turning within the range threshold to light contour but after staying long in light
-            if distance_head_temp < distance_out_light_threshold               
+            if distance_head_temp < distance_out_light_threshold
                 
                 % exclude turns after more than 5 seconds in light
                 y = 0;
@@ -386,14 +386,14 @@ for i = 1:p
                 if y > 300
                     still_starts_out_light(j)=-1;
                 end
-            end            
+            end
         end
         still_starts_out_light(find(still_starts_out_light==-1))=[];
     end
-
+    
     % merge all the turns in range of light response
     light_still_starts = still_starts(find(ismember(still_starts,still_starts_in_light) + ismember(still_starts,still_starts_out_light)));
-    light_frame_turn_peaks_ID_pos = find(ismember(still_starts,light_still_starts));      
+    light_frame_turn_peaks_ID_pos = find(ismember(still_starts,light_still_starts));
     light_turn_event{i}.turn_avoid_light = turn_avoid_light(light_frame_turn_peaks_ID_pos);
     light_turn_event{i}.body_edge_angle = body_edge_angle(light_frame_turn_peaks_ID_pos);
     light_turn_event{i}.distance_head_start = distance_head_start(light_frame_turn_peaks_ID_pos);
