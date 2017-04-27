@@ -22,6 +22,10 @@ Definitions of parameters:
 
 + distance_headomega_zero_first: the head-to-light_spot_edge distance for the first Frame_headomega_zero within a stop period 
 
+Datas:
+------
+Raw datas are avalible on [this].(https://drive.google.com/open?id=0B7J2ozomY_jiNzlGaTN1MUh6eFE)
+
 Reference:
 ----------
 SOS-Tracker
