@@ -24,7 +24,7 @@ Definitions of parameters:
 
 Datas:
 ------
-Raw datas are avalible on [this].(https://drive.google.com/open?id=0B7J2ozomY_jiNzlGaTN1MUh6eFE)
+Raw datas are avalible on [this](https://drive.google.com/open?id=0B7J2ozomY_jiNzlGaTN1MUh6eFE).
 
 Reference:
 ----------
