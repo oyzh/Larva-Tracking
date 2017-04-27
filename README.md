@@ -28,5 +28,6 @@ Raw datas are avalible on [this](https://drive.google.com/open?id=0B7J2ozomY_jiN
 
 Reference:
 ----------
-SOS-Tracker
+[SOS-Tracker](https://sourceforge.net/projects/sos-track/)
+
 Gomez-Marin, Alex, et al. "Automated tracking of animal posture and movement during exploration and sensory orientation behaviors." PloS one 7.8 (2012): e41642.
